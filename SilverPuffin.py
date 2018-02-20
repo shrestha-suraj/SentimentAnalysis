@@ -15,12 +15,11 @@ def takeInScript(file_name):
     file=re.sub(r'\W+'," ",file)
     file=file.split(" ")
     file=list(set(file))
-    return scoreAnalysis(file)
+    scoreAnalysis(file)
     
 def scoreAnalysis(file):
-    x_values=[], y_values=[]
+    dictionary={"Neg": 0.0, "W.Neg": 0.0, "Neu": 0.0, "W.Pos": 0.0, "Pos": 0.0}
     clean_text=[]
-    score=0.0
     for x in file:
         if not x.isalpha() or len(x)==1 or x==x.upper():
             continue
@@ -29,12 +28,26 @@ def scoreAnalysis(file):
         for y in lexicon_file:
             lexicon_data=y.split(",")
             if x.lower()==lexicon_data[0]:
-                score+=np.float32(lexicon_data[1])
-    return score
-
-
-print takeInScript("a101script.txt")
-print takeInScript("bg101script.txt")
+                if -1.0<=np.float32(lexicon_data[1])<-0.6:
+                    dictionary["Neg"]+=np.float32(lexicon_data[1])
+                elif -0.6<=np.float32(lexicon_data[1])<-0.2:
+                    dictionary["W.Neg"]+=np.float32(lexicon_data[1])
+                elif -0.2<=np.float32(lexicon_data[1])<=0.2:
+                    dictionary["Neu"]+=np.float32(lexicon_data[1])
+                elif 0.2<np.float32(lexicon_data[1])<=0.6:
+                    dictionary["W.Pos"]+=np.float32(lexicon_data[1])
+                elif 0.6<=np.float32(lexicon_data[1])<=1.0:
+                    dictionary["Pos"]+=np.float32(lexicon_data[1])
+    values=dictionary.values()
+    keys=dictionary.keys()
+    mplot.bar(range(0,len(values)),np.log10(values))
+    mplot.xticks(range(0,len(keys)),keys)
+    mplot.xlabel("Word Range")
+    mplot.ylabel("Number of words")
+    mplot.show()
+                
+takeInScript("a101script.txt")
+takeInScript("bg101script.txt")
 
 #print clean_text
             
