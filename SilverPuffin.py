@@ -1,6 +1,9 @@
 # Spirit Animal User ID: SilverPuffin
 # Date the file was last edited: Feb 22, 2018
 # Challenge Number: 2.0
+# Online Sources Used
+# 1) https://stackoverflow.com/questions/22232906/list-all-file-name-of-a-directory-to-text-file
+# 2) https://developers.google.com/edu/python/strings
 
 #  Importing contents to be used in the project
 from __future__ import division
@@ -27,11 +30,11 @@ def mergeSeries (series):
             file=open(filename,"r")
             file=file.read()
             main_string+=file
-    scoreAnalysis(main_string)
+    scoreAnalysis(main_string,series)
 
 #<-------------------------------------------------------------------------------------->    
 
-def scoreAnalysis(huge_string):
+def scoreAnalysis(huge_string,series_code):
     file=re.sub(r'\W+'," ",huge_string)
     file=file.split(" ")
     file=list(set(file))
@@ -59,12 +62,13 @@ def scoreAnalysis(huge_string):
     keys=dictionary.keys()
     mplot.bar(range(0,len(values)),np.log10(values))
     mplot.xticks(range(0,len(keys)),keys)
-    mplot.xlabel("Word Range")
-    mplot.ylabel("Number of words")
+    mplot.xlabel("Sentiment")
+    mplot.ylabel("log Word Count")
+    mplot.title("Sentiment Analysis for Series "+series_code)
     mplot.show()
 
 #<--------------------------------------------------------------------------------------->
-    
+# Ask user to input a or b for series analysis    
 mergeSeries(raw_input ("Enter the series name (a or b): "))
 
             
