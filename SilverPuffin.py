@@ -12,10 +12,17 @@ import matplotlib.pyplot as mplot
 import re
 import os
 
-# Analysing Lexicon file to split the words and its emotional value
+# Analysing Lexicon file to split the words and its emotional value and putting them into a
+# dictionary named as Lexicon_dictionary
 lexicon_file=open("sentiment_lex.csv","r")
 lexicon_file=lexicon_file.read()
 lexicon_file=lexicon_file.split("\n")
+lexicon_file.pop()
+lexicon_file.pop()
+lexicon_dictionary={}
+for data in lexicon_file:
+    data=data.split(",")
+    lexicon_dictionary[data[0]]=np.float32(data[1])
 #<-------------------------------------------------------------------------------------->
 # The function of mergeSeries is tokae in a String 'a' or 'b' from the user and then
 # use the algorithm to search text files with specific starting charcater i.e. 'a' or 'b'
@@ -28,12 +35,14 @@ def mergeSeries (series):
     for filename in dirList:
         if filename.startswith(series.lower()):
             file=open(filename,"r")
-            file=file.read()
-            main_string+=file
+            data=file.read()
+            main_string+=data
+            file.close()
     scoreAnalysis(main_string,series)
 
 #<-------------------------------------------------------------------------------------->    
-
+# Analyses the string, checks its presence in lexicon_dictinary and gives the histogram
+# chart based on the information provided...
 def scoreAnalysis(huge_string,series_code):
     file=re.sub(r'\W+'," ",huge_string)
     file=file.split(" ")
@@ -45,18 +54,16 @@ def scoreAnalysis(huge_string,series_code):
             continue
         clean_text.append(x)
     for x in clean_text:
-        for y in lexicon_file:
-            lexicon_data=y.split(",")
-            if x.lower()==lexicon_data[0]:
-                if -1.0<=np.float32(lexicon_data[1])<-0.6:
+        if x in lexicon_dictionary:
+            if -1.0<=lexicon_dictionary[x]<-0.6:
                     dictionary["Neg"]+=1
-                elif -0.6<=np.float32(lexicon_data[1])<-0.2:
+            elif -0.6<=lexicon_dictionary[x]<-0.2:
                     dictionary["W.Neg"]+=1
-                elif -0.2<=np.float32(lexicon_data[1])<=0.2:
+            elif -0.2<=lexicon_dictionary[x]<=0.2:
                     dictionary["Neu"]+=1
-                elif 0.2<np.float32(lexicon_data[1])<=0.6:
+            elif 0.2<lexicon_dictionary[x]<=0.6:
                     dictionary["W.Pos"]+=1
-                elif 0.6<=np.float32(lexicon_data[1])<=1.0:
+            elif 0.6<=lexicon_dictionary[x]<=1.0:
                     dictionary["Pos"]+=1
     values=dictionary.values()
     keys=dictionary.keys()
