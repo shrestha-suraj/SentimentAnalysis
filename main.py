@@ -1,10 +1,3 @@
-# Spirit Animal User ID: SilverPuffin
-# Date the file was last edited: Feb 22, 2018
-# Challenge Number: 2.0
-# Online Sources Used
-# 1) https://stackoverflow.com/questions/22232906/list-all-file-name-of-a-directory-to-text-file
-# 2) https://developers.google.com/edu/python/strings
-
 #  Importing contents to be used in the project
 from __future__ import division
 import numpy as np
